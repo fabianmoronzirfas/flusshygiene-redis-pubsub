@@ -1,0 +1,28 @@
+name: Build and Push Docker Image
+
+on: [release]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the source
+        uses: actions/checkout@v1
+
+      - name: test and build source
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
+      - run: npm ci --quiet
+      - run: npm run build
+
+      - name: Docker login
+        uses: actions/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          CI: true
+
+      - name: Build and push the image
+        uses: actions/docker/cli-multi@master
+        with:
+          args: '"build --label version=${GITHUB_REF##*/} --tag ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}-dev ." "push ${GITHUB_REPOSITORY}:${GITHUB_REF##*/}-dev"'
