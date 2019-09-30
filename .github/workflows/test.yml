@@ -18,6 +18,6 @@ jobs:
       - name: npm install, test and test build
         run: |
           npm ci --quit
-          npm test
+          npm run test:ci
         env:
           CI: true

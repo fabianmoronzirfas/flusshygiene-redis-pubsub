@@ -8,13 +8,6 @@ jobs:
       - name: Get the source
         uses: actions/checkout@v1
 
-      - name: test and build source
-        uses: actions/setup-node@master
-        with:
-          node-version: 10.x
-      - run: npm ci --quiet
-      - run: npm run build
-
       - name: Docker login
         uses: actions/docker/login@master
         env:
